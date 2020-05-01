@@ -1,0 +1,163 @@
+
+<!Doctype HTML>
+<html>
+<head>
+    <style>
+        
+        
+    </style>
+    
+</head>
+
+
+<body>
+    
+    
+    <div>
+        
+        <h1>
+            SHUBHAM's PLAYGROUND
+        </h1>
+        <canvas id='neelam'>
+            
+            
+        </canvas>
+    </div>
+<script>
+let	canvas = document.getElementById("neelam"),
+    context = canvas.getContext("2d");
+
+// round pixelRatio, because older devices have a pixelRatio of 1.5. Treat them as @2x devices
+let pixelRatio = Math.round(window.devicePixelRatio) || 1;
+
+
+// we're working with all available pixels, i. e. 750x1334 on an iPhone 7
+let width = screen.width * pixelRatio;
+let height = screen.height * pixelRatio;
+
+// here's the magic: the actual canvas has the same pixels as the device (iPhone 7 in this case)
+canvas.width = width;
+canvas.height = height;
+// however, the canvas dimensions are set to the pixels we're working with in the browser.
+canvas.style.width = Math.round(width / pixelRatio) + "px";
+canvas.style.height = Math.round(height / pixelRatio) + "px";
+
+// now let's draw stuff
+context.clearRect(0, 0, width, height);
+
+function line(a){
+//{p:p,x1:x1,y1:y1,x2:x2,y:y2,color:color,lineWidthlineWidth}    
+context.save();
+context.lineWidth = a.lineWidth||1;
+context.strokeStyle = a.color||"black";
+context.beginPath();
+console.log(a.p);
+if (a.p){
+context.moveTo(a.p[0].x + 0.5, a.p[0].y + 0.5);
+for (var i=1;i<a.p.length;i++){
+console.log(i);    
+context.lineTo(a.p[i].x + 0.5, a.p[i].y + 0.5);
+}    
+} 
+if (a.close)context.closePath();
+context.stroke();
+
+if (a.fill){
+context.fillStyle = a.fill;
+context.fill();
+}
+
+context.restore();
+}
+
+
+function ellipse(x, y, rw, rh)
+{
+  context.save();
+  context.scale(1,  rh/rw);
+  context.beginPath();
+  context.arc(x, y, rw, 0, 2 * Math.PI);
+  context.restore();
+  context.lineWidth=4;
+  context.strokeStyle="orange";
+  context.stroke();  
+}
+
+function triangle(x1,y1,x2,y2,x3,y3,color,fill){
+line({p:[{x:x1,y:y1},{x:x2,y:y2},{x:x3,y:y3}],color:color,fill:fill||false,lineWidth:lineWidth||1,close:true});
+}
+
+
+/*
+function square(x,y,l,color){
+line({p:[{x:x,y:y},{x:}])    
+}
+*/
+
+
+function square(a,b,l,color,lineWidth){
+line({p:[{x:a,y:b},{x:a+l,y:b},{x:a+l,y:b+l},{x:a,y:b+l}],color:color,lineWidth:lineWidth||1,close:true});
+}
+
+function rectangle(x,y,a,b,color,fill,lineWidth){
+line({p:[{x:x,y:y},{x:x+a,y:y},{x:x+a,y:y+b},{x:x,y:y+b}],color:color,fill:fill,lineWidth:lineWidth||1,close:true});
+}
+
+function robot(x,y,h,w,color,fill){
+//head  h/8, h/8
+//neck  h/16,h/16
+//body  h/4,h/3
+//leg   h*9/16 ,h/12
+//eye h/48;
+//mouth  h/16,h/80,
+
+rectangle(x+w/2-h/16,y,h/8,h/8,color,fill);
+rectangle(x+w/2-h/32,y+h/8,h/16,h/16,color,fill);
+rectangle(x+w/2-h/8,y+h/8+h/16,h/4,h/3,color,fill);
+rectangle(x+w/2-h/24-h/12,y+h/8+h/16+h/3,h/12,h*9/16,color,fill);
+rectangle(x+w/2-h/24+h/12,y+h/8+h/16+h/3,h/12,h*9/16,color,fill);
+rectangle(x,y+h/8+h/16,w/2-h/8,h/16,color,fill);
+rectangle(x+w/2+h/8,y+h/8+h/16,w/2-h/8,h/16,color,fill);
+rectangle(x+w/2-h/24,y+h/32,h/32,h/32,color,fill);
+rectangle(x+w/2+h/48,y+h/32,h/32,h/32,color,fill);
+rectangle(x+w/2-h/32,y+h/12,h/16,h/80,color,fill);
+
+
+}
+
+/*
+square(10,10,290,"blue");
+square(20,20,200,"red");
+square(30,30,150,"green");
+square(50,50,100,"yellow");
+square(5,5,450,"red",3);
+*/
+
+
+function multiRobot(n){
+var x,y,w,l,color;
+
+for (var i=0;i<n;i++){
+x=Math.round(Math.random()*screen.width*2/3);
+y=Math.round(Math.random()*screen.height*2/3);
+l=w=Math.random()*400;
+color="#"+Math.floor(Math.random()*16777215).toString(16);
+robot(x,y,w,l,"black",color);    
+}    
+    
+}
+
+robot(15,15,300,300,"black","red");
+//robot(350,15,300,300,"blue");
+//robot(650,15,100,100,"green");
+multiRobot(50);
+
+//rectangle(15,15,300,200,"red");
+
+
+
+</script>
+
+</body>
+
+</html>
